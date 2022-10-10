@@ -38,9 +38,30 @@ def plot_cube_quaternion(q):
     plt.show()
     return
 
-if __name__ == "__main__":
-    q = Quaternion(0.5, 0.5, 0.5, 0)
+def receive_quaternion():
+    # Receive quaternion from Serial connection
+    # open serial connection
+    serial = serial.Serial('/dev/ttyUSB0', 115200)
+    # read quaternion, each quaternion is 4bytes-float numbers
+    q1 = serial.read(4)
+    q2 = serial.read(4)
+    q3 = serial.read(4)
+    q4 = serial.read(4)
+    # close serial connection
+    serial.close()
+    # convert to float
+    q1 = struct.unpack('f', q1)[0]
+    q2 = struct.unpack('f', q2)[0]
+    q3 = struct.unpack('f', q3)[0]
+    q4 = struct.unpack('f', q4)[0]
+    # create quaternion
+    q = Quaternion(q1, q2, q3, q4)
+    return q
 
+if __name__ == "__main__":
+    #q = Quaternion(0.5, 0.5, 0.5, 0)
     #q = Quaternion(axis=[1, 0, 0], angle=np.pi/4)
+    q = receive_quaternion()
+
     # Plot the cube
     plot_cube_quaternion(q)
