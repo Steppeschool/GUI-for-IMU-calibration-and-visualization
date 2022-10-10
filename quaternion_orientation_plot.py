@@ -3,7 +3,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from itertools import combinations, product
 from pyquaternion import Quaternion
-
+import serial
 
 def plot_cube_quaternion(q):
     # Plot the cube
@@ -41,14 +41,14 @@ def plot_cube_quaternion(q):
 def receive_quaternion():
     # Receive quaternion from Serial connection
     # open serial connection
-    serial = serial.Serial('/dev/ttyUSB0', 115200)
+    ser = serial.Serial('/dev/ttyUSB0', 115200)
     # read quaternion, each quaternion is 4bytes-float numbers
-    q1 = serial.read(4)
-    q2 = serial.read(4)
-    q3 = serial.read(4)
-    q4 = serial.read(4)
+    q1 = ser.read(4)
+    q2 = ser.read(4)
+    q3 = ser.read(4)
+    q4 = ser.read(4)
     # close serial connection
-    serial.close()
+    ser.close()
     # convert to float
     q1 = struct.unpack('f', q1)[0]
     q2 = struct.unpack('f', q2)[0]
@@ -59,9 +59,9 @@ def receive_quaternion():
     return q
 
 if __name__ == "__main__":
-    #q = Quaternion(0.5, 0.5, 0.5, 0)
+    q = Quaternion(0.5, 0.5, 0.5, 0)
     #q = Quaternion(axis=[1, 0, 0], angle=np.pi/4)
-    q = receive_quaternion()
+    #q = receive_quaternion()
 
     # Plot the cube
     plot_cube_quaternion(q)
